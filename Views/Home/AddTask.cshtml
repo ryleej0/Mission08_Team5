@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Add Task";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form method="post">
+
+    @* Lists all validation errors when required fields are missing or invalid. *@
+    <div asp-validation-summary="All" class="text-danger"></div>
+    @* Hidden MovieId: used when editing an existing movie so the correct record is updated. *@
+    <input type="hidden" asp-for="TaskId" />
+
+    <label asp-for="Task">Task</label>
+    <input asp-for="Task"/>
+    <span asp-validation-for="Task" class="text-danger"></span>
+    <br />
+    <label asp-for="DueDate">Due Date</label>
+    <input asp-for="DueDate" />
+    <br />
+    <label asp-for="Quadrant">Quandrant</label>
+    <select asp-for="Quadrant">
+        <option value="">--Select--</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+    </select>
+    <span asp-validation-for="Quadrant" class="text-danger"></span>
+    <br />
+    <label asp-for="Category">Category</label>
+    <select asp-for="Category">
+        <option value="">--Select--</option>
+        <option>Home</option>
+        <option>School</option>
+        <option>Work</option>
+        <option>Church</option>
+    </select>
+    <br />
+    <label asp-for="Completed">Completed</label>
+    <select asp-for="Completed">
+        <option value="false">No</option>
+        <option value="true">Yes</option>
+    </select>
+</form>
