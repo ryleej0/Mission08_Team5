@@ -1,8 +1,137 @@
-﻿@{
+﻿@using System.Linq
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@model List<TaskItem>
+
+<div class="container">
+    <h2 class="text-center mb-4">Time Management Matrix</h2>
+
+    <div class="row">
+        <!-- Quadrant I -->
+        <div class="col-md-6 border p-3 shadow-sm">
+            <h4>Quadrant I</h4>
+            <p><em>Important / Urgent</em></p>
+
+            @foreach (var task in Model.Where(t => t.Quadrant == 1 && !t.Completed))
+            {
+                <div class="card mb-2 p-2">
+                    <strong>@task.TaskDescription</strong><br />
+                    @if (task.DueDate != null)
+                    {
+                        <span>Due: @task.DueDate?.ToShortDateString()</span>
+
+                        <br />
+                    }
+                    <span>Category: @task.Category?.Name</span>
+
+                    <div class="mt-2">
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.TaskId"
+                           class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@task.TaskId"
+                           class="btn btn-sm btn-danger">Delete</a>
+                        <a asp-controller="Home" asp-action="Complete" asp-route-id="@task.TaskId"
+                           class="btn btn-sm btn-success">Complete</a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Quadrant II -->
+        <div class="col-md-6 border p-3 shadow-sm">
+            <h4>Quadrant II</h4>
+            <p><em>Important / Not Urgent</em></p>
+
+            @foreach (var task in Model.Where(t => t.Quadrant == 2 && !t.Completed))
+            {
+                <div class="card mb-2 p-2">
+                    <strong>@task.TaskDescription</strong>
+
+                    <div class="mt-2">
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+
+                        <a asp-controller="Home" asp-action="Complete" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-success">
+                            Complete
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <!-- Quadrant III -->
+        <div class="col-md-6 border p-3 shadow-sm">
+            <h4>Quadrant III</h4>
+            <p><em>Not Important / Urgent</em></p>
+
+            @foreach (var task in Model.Where(t => t.Quadrant == 3 && !t.Completed))
+            {
+                <div class="card mb-2 p-2">
+                    <strong>@task.TaskDescription</strong>
+
+                    <div class="mt-2">
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+
+                        <a asp-controller="Home" asp-action="Complete" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-success">
+                            Complete
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Quadrant IV -->
+        <div class="col-md-6 border p-3 shadow-sm">
+            <h4>Quadrant IV</h4>
+            <p><em>Not Important / Not Urgent</em></p>
+
+            @foreach (var task in Model.Where(t => t.Quadrant == 4 && !t.Completed))
+            {
+                <div class="card mb-2 p-2">
+                    <strong>@task.TaskDescription</strong>
+                    <div class="mt-2">
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+
+                        <a asp-controller="Home" asp-action="Complete" asp-route-id="@task.TaskId"
+                               class="btn btn-sm btn-success">
+                            Complete
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
