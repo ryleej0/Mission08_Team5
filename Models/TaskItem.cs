@@ -4,6 +4,7 @@ namespace Mission08_Team5.Models;
 
 public class TaskItem
 {
+    [Key]
     public int TaskId { get; set; }
 
     [Required]
