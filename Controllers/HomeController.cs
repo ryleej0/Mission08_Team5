@@ -1,23 +1,27 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Mission08_Team5.Data;
 using Mission08_Team5.Models;
-using System.Linq;
 
 namespace Mission08_Team5.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ITaskRepository _repo;
+    private readonly AppDbContext _context;
 
-    public HomeController(ITaskRepository repo)
+    public HomeController(ITaskRepository repo, AppDbContext context)
     {
         _repo = repo;
+        _context = context;
     }
 
+    /// <summary>
+    /// Quadrants view - displays all incomplete tasks in the four Covey quadrants.
+    /// </summary>
     public IActionResult Index()
     {
-        // display all tasks (including completed? view filters)
-        var tasks = _repo.Tasks.ToList();
+        var tasks = _repo.Tasks.Where(t => !t.Completed).ToList();
         return View(tasks);
     }
 
@@ -32,7 +36,32 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
-    // Additional actions for edit/delete/complete
+    #region Add Task
+
+    [HttpGet]
+    public IActionResult AddTask()
+    {
+        ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+        return View(new TaskItem());
+    }
+
+    [HttpPost]
+    public IActionResult AddTask(TaskItem task)
+    {
+        if (ModelState.IsValid)
+        {
+            _repo.AddTask(task);
+            _repo.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
+        return View(task);
+    }
+
+    #endregion
+
+    #region Edit Task
+
     [HttpGet]
     public IActionResult Edit(int id)
     {
@@ -41,7 +70,7 @@ public class HomeController : Controller
         {
             return NotFound();
         }
-        ViewBag.Categories = _repo.Tasks.Select(t => t.Category).Distinct().ToList();
+        ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
         return View(task);
     }
 
@@ -54,11 +83,18 @@ public class HomeController : Controller
             _repo.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-        ViewBag.Categories = _repo.Tasks.Select(t => t.Category).Distinct().ToList();
+        ViewBag.Categories = _context.Categories.OrderBy(c => c.Name).ToList();
         return View(task);
     }
 
-    [HttpPost]
+    #endregion
+
+    #region Delete & Complete
+
+    // Note: Ideally these would be [HttpPost] only. The Quadrants view uses <a> links (GET).
+    // For the app to work with current views, we accept GET. Person #3 should update to use
+    // <form method="post"> for better practice.
+    [HttpGet]
     public IActionResult Delete(int id)
     {
         var task = _repo.GetTaskById(id);
@@ -70,7 +106,7 @@ public class HomeController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
+    [HttpGet]
     public IActionResult Complete(int id)
     {
         var task = _repo.GetTaskById(id);
@@ -82,4 +118,6 @@ public class HomeController : Controller
         }
         return RedirectToAction(nameof(Index));
     }
+
+    #endregion
 }
