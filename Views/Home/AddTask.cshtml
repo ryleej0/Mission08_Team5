@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Mission08_Team5.Models.TaskItem
+@{
     ViewData["Title"] = "Add Task";
 }
 <h1>@ViewData["Title"]</h1>
@@ -10,9 +11,9 @@
     @* Hidden MovieId: used when editing an existing movie so the correct record is updated. *@
     <input type="hidden" asp-for="TaskId" />
 
-    <label asp-for="Task">Task</label>
-    <input asp-for="Task"/>
-    <span asp-validation-for="Task" class="text-danger"></span>
+    <label asp-for="TaskDescription">Task</label>
+    <input asp-for="TaskDescription" class="form-control" />
+    <span asp-validation-for="TaskDescription" class="text-danger"></span>
     <br />
     <label asp-for="DueDate">Due Date</label>
     <input asp-for="DueDate" />
