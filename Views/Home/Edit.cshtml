@@ -1,0 +1,56 @@
+@model TaskItem
+@{
+    ViewData["Title"] = "Edit Task";
+    var categories = ViewBag.Categories as IEnumerable<Category> ?? new List<Category>();
+}
+
+<div class="container">
+    <h2 class="mb-4">Edit Task</h2>
+
+    <form asp-action="Edit" method="post" class="row g-3">
+        <input type="hidden" asp-for="TaskId" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="col-12">
+            <label asp-for="TaskDescription" class="form-label">Task (Required)</label>
+            <input asp-for="TaskDescription" class="form-control" />
+            <span asp-validation-for="TaskDescription" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="DueDate" class="form-label">Due Date</label>
+            <input asp-for="DueDate" type="date" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Quadrant" class="form-label">Quadrant (Required)</label>
+            <select asp-for="Quadrant" class="form-select" required>
+                <option value="1">Quadrant I: Important / Urgent</option>
+                <option value="2">Quadrant II: Important / Not Urgent</option>
+                <option value="3">Quadrant III: Not Important / Urgent</option>
+                <option value="4">Quadrant IV: Not Important / Not Urgent</option>
+            </select>
+            <span asp-validation-for="Quadrant" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="CategoryId" class="form-label">Category</label>
+            <select asp-for="CategoryId" class="form-select">
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.CategoryId">@cat.Name</option>
+                }
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
