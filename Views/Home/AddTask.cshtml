@@ -1,45 +1,58 @@
-﻿@model Mission08_Team5.Models.TaskItem
+@model Mission08_Team5.Models.TaskItem
 @{
     ViewData["Title"] = "Add Task";
+    var categories = ViewBag.Categories as IEnumerable<Category> ?? new List<Category>();
 }
-<h1>@ViewData["Title"]</h1>
 
-<form method="post">
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
 
-    @* Lists all validation errors when required fields are missing or invalid. *@
-    <div asp-validation-summary="All" class="text-danger"></div>
-    @* Hidden MovieId: used when editing an existing movie so the correct record is updated. *@
-    <input type="hidden" asp-for="TaskId" />
+    <form asp-action="AddTask" method="post" class="row g-3">
+        @* Lists all validation errors when required fields are missing or invalid. *@
+        <div asp-validation-summary="All" class="text-danger"></div>
 
-    <label asp-for="TaskDescription">Task</label>
-    <input asp-for="TaskDescription" class="form-control" />
-    <span asp-validation-for="TaskDescription" class="text-danger"></span>
-    <br />
-    <label asp-for="DueDate">Due Date</label>
-    <input asp-for="DueDate" />
-    <br />
-    <label asp-for="Quadrant">Quandrant</label>
-    <select asp-for="Quadrant">
-        <option value="">--Select--</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-    </select>
-    <span asp-validation-for="Quadrant" class="text-danger"></span>
-    <br />
-    <label asp-for="Category">Category</label>
-    <select asp-for="Category">
-        <option value="">--Select--</option>
-        <option>Home</option>
-        <option>School</option>
-        <option>Work</option>
-        <option>Church</option>
-    </select>
-    <br />
-    <label asp-for="Completed">Completed</label>
-    <select asp-for="Completed">
-        <option value="false">No</option>
-        <option value="true">Yes</option>
-    </select>
-</form>
+        <div class="col-12">
+            <label asp-for="TaskDescription" class="form-label">Task (Required)</label>
+            <input asp-for="TaskDescription" class="form-control" />
+            <span asp-validation-for="TaskDescription" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="DueDate" class="form-label">Due Date</label>
+            <input asp-for="DueDate" type="date" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Quadrant" class="form-label">Quadrant (Required)</label>
+            <select asp-for="Quadrant" class="form-select" required>
+                <option value="">-- Select Quadrant --</option>
+                <option value="1">Quadrant I: Important / Urgent</option>
+                <option value="2">Quadrant II: Important / Not Urgent</option>
+                <option value="3">Quadrant III: Not Important / Urgent</option>
+                <option value="4">Quadrant IV: Not Important / Not Urgent</option>
+            </select>
+            <span asp-validation-for="Quadrant" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="CategoryId" class="form-label">Category</label>
+            <select asp-for="CategoryId" class="form-select">
+                <option value="">-- Select Category --</option>
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.CategoryId">@cat.Name</option>
+                }
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Add Task</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
